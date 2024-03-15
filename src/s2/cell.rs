@@ -436,6 +436,16 @@ impl Region for Cell {
         cap
     }
 
+    // cell_union_bound computes a covering of the Cell.
+    fn cell_union_bound(&self) -> Vec<CellID> {
+        self.cap_bound().cell_union_bound()
+    }
+
+    /// rect_bound returns the bounding rectangle of this cell.
+    fn rect_bound(&self) -> s2::rect::Rect {
+        self.rect_bound()
+    }
+
     /// intersects_cell reports whether the intersection of this cell and the other cell is not nil.
     fn intersects_cell(&self, other: &Cell) -> bool {
         self.id.intersects(&other.id)
@@ -444,6 +454,17 @@ impl Region for Cell {
     /// contains_cell reports whether this cell contains the other cell.
     fn contains_cell(&self, other: &Cell) -> bool {
         self.id.contains(&other.id)
+    }
+
+    // ContainsPoint reports whether this cell contains the given point. Note that
+    // unlike loop/Polygon, a Cell is considered to be a closed set. This means
+    // that a point on a Cell's edge or vertex belong to the Cell and the relevant
+    // adjacent Cells too.
+    //
+    // If you want every point to be contained by exactly one Cell,
+    // you will need to convert the Cell to a loop.
+    fn contains_point(&self, p: &Point) -> bool {
+        self.contains_point(p)
     }
 }
 

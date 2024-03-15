@@ -326,6 +326,11 @@ impl Region for Cap {
         !self.complement().intersects_cell_vertices(cell, vertices)
     }
 
+    /// contains_point reports whether this cap contains the point.
+    fn contains_point(&self, point: &Point) -> bool {
+        self.contains_point(point)
+    }
+
     /// intersects_cell reports whether the cap intersects the cell.
     fn intersects_cell(&self, cell: &Cell) -> bool {
         // If the cap contains any cell vertex, return true.

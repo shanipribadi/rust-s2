@@ -9,6 +9,7 @@ use crate::s1::ChordAngle;
 use crate::s1::*;
 use crate::s2::cap::Cap;
 use crate::s2::cell::Cell;
+use crate::s2::cellid::CellID;
 use crate::s2::latlng::LatLng;
 use crate::s2::predicates::*;
 use crate::s2::rect::Rect;
@@ -430,6 +431,17 @@ impl Region for Point {
     /// contains_cell returns false as Points do not contain any other S2 types.
     fn contains_cell(&self, _: &Cell) -> bool {
         false
+    }
+
+    // contains_point reports if this Point contains the other Point.
+    // (This method is named to satisfy the Region trait.)
+    fn contains_point(&self, p: &Point) -> bool {
+        self.contains(p)
+    }
+
+    // cell_union_bound computes a covering of the Point.
+    fn cell_union_bound(&self) -> Vec<CellID> {
+        self.cap_bound().cell_union_bound()
     }
 
     /// intersects_cell reports whether this Point intersects the given cell.

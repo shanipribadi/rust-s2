@@ -224,6 +224,11 @@ impl Region for CellUnion {
         cap
     }
 
+    // cell_union_bound computes a covering of the CellUnion.
+    fn cell_union_bound(&self) -> Vec<CellID> {
+        self.cap_bound().cell_union_bound()
+    }
+
     /// rect_bound returns a Rect that bounds this entity.
     fn rect_bound(&self) -> Rect {
         let mut bound = Rect::empty();
@@ -236,6 +241,11 @@ impl Region for CellUnion {
     // contains_cell reports whether this cell union contains the given cell.
     fn contains_cell(&self, c: &Cell) -> bool {
         self.contains_cellid(&c.id)
+    }
+
+    // contains_point reports whether this cell union contains the given point.
+    fn contains_point(&self, p: &Point) -> bool {
+        self.contains_cell(&Cell::from(p))
     }
 
     // intersects_cell reports whether this cell union intersects the given cell.

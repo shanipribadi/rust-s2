@@ -24,6 +24,7 @@ use crate::s2::cap::Cap;
 use crate::s2::cell::Cell;
 use crate::s2::cellid::*;
 use crate::s2::cellunion::CellUnion;
+use crate::s2::point::Point;
 use crate::s2::rect::Rect;
 
 /// A Region represents a two-dimensional region on the unit sphere.
@@ -37,27 +38,27 @@ pub trait Region {
 
     /// rect_bound returns a bounding latitude-longitude rectangle that contains
     /// the region. The bounds are not guaranteed to be tight.
-    fn rect_bound(&self) -> Rect {
-        let cap = self.cap_bound();
-        cap.rect_bound()
-    }
+    fn rect_bound(&self) -> Rect;
 
     /// contains_cell reports whether the region completely contains the given region.
     /// It returns false if containment could not be determined.
-    fn contains_cell(&self, cell: &Cell) -> bool {
-        self.cap_bound().contains_cell(cell)
-    }
+    fn contains_cell(&self, cell: &Cell) -> bool;
+
+    // contains_point reports whether the region contains the given point or not.
+    // The point should be unit length, although some implementations may relax
+    // this restriction.
+    fn contains_point(&self, point: &Point) -> bool;
 
     /// intersects_cell reports whether the region intersects the given cell or
     /// if intersection could not be determined. It returns false if the region
     /// does not intersect.
-    fn intersects_cell(&self, cell: &Cell) -> bool {
-        self.cap_bound().intersects_cell(cell)
-    }
+    fn intersects_cell(&self, cell: &Cell) -> bool;
 
-    fn cell_union_bound(&self) -> Vec<CellID> {
-        self.cap_bound().cell_union_bound()
-    }
+    // cell_union_bound implementations should attempt to return a small
+    // covering (ideally 4 cells or fewer) that covers the region and can be
+    // computed quickly. The result is used by S2RegionCoverer as a starting
+    // point for further refinement.
+    fn cell_union_bound(&self) -> Vec<CellID>;
 }
 
 /// RegionCoverer allows arbitrary regions to be approximated as unions of cells (CellUnion).

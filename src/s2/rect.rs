@@ -6,6 +6,7 @@ use crate::consts::*;
 use crate::r1;
 use crate::r3::vector::Vector;
 use crate::s1::*;
+use crate::s2::cellid::CellID;
 use crate::s2::edgeutil;
 use crate::s2::latlng::LatLng;
 
@@ -526,6 +527,16 @@ impl Region for Rect {
         // effects; for instance, if one creates an s2.Polygon from an s2.Cell, the
         // polygon will contain the cell, but the polygon's bounding box will not.
         self.contains(&c.rect_bound())
+    }
+
+    /// contains_point reports whether the given Point is within the Rect.
+    fn contains_point(&self, p: &Point) -> bool {
+        self.contains_point(p)
+    }
+
+    // cell_union_bound computes a covering of the Rect.
+    fn cell_union_bound(&self) -> Vec<CellID> {
+        self.cap_bound().cell_union_bound()
     }
 
     /// intersects_cell reports whether this rectangle intersects the
